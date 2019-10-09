@@ -19,14 +19,15 @@ class LinkedList {
             node.next = null;
         }
         this.length++;
+        return this;
     }
 
     head() {
-        return this._head.data;
+        return (this._head) ? this._head.data : null;
     }
 
     tail() {
-        return this._tail.data;
+        return (this._tail) ? this._tail.data : null;
     }
 
     at(index) {
@@ -58,6 +59,7 @@ class LinkedList {
             current.prev = node
         }
         this.length++;
+        return this;
     }
 
     isEmpty() {
@@ -69,26 +71,71 @@ class LinkedList {
     }
 
     clear() {
-        let current = this._head;
-        while (this.length) {
-            current.next.prev = null;
-            current.prev.next = null;
-            current = current.next;
-            this.length--;
-        }
-        console.log(current);
+        this._head = null;
+        this._tail = null;
+        this.length = 0;
+        return this;
     }
 
     deleteAt(index) {
-
+        if (index < 0 || index > this.length) {
+            return false;
+        }
+        if (index === 0) {
+            this._head.next.prev = null;
+            this._head = this._head.next;
+            if (length === 1) {
+                this._tail = null;
+            }
+            this.length--;
+            return this;
+        } else if (index === this.length) {
+            this._tail.prev.next = null;
+            this._tail = this._tail.prev;
+            this.length--;
+            return this;
+        } else {
+            let current = this._head;
+            for (let i = 1; i <= index; i++) {
+                current = current.next;
+            }
+            current.prev.next = current.next;
+            current.next.prev = current.prev;
+            this.length--;
+            return this;
+        }
     }
 
     reverse() {
-
+        if (this.length === 1) {
+            return this;
+        }
+        let current = this._head;
+        let previousNode = null;
+        while (current !== null) {
+            let nextNode = current.next;
+            current.next = previousNode;
+            current.prev = nextNode;
+            previousNode = current;
+            current = nextNode;
+        }
+        this._tail = this._head
+        this._head = previousNode;
+        return this;
     }
 
     indexOf(data) {
-
+        let current = this._head;
+        if (!this.length) {
+            return false;
+        }
+        for (let i = 0; i < this.length; i++) {
+            if (current.data === data) {
+                return i;
+            }
+            current = current.next;
+        }
+        return -1;
     }
 }
 
